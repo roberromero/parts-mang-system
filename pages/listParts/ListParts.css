@@ -5,5 +5,15 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 15px;
+    padding: 5px;
+  
+}
+.page-container > input {
+    position: absolute;
+    top: 66px;
+    right: 50px;
+    border-radius: 5px;
+    outline: none;
+    padding: 8px;
+    border: 0;
 }

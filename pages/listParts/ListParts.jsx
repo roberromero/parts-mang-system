@@ -13,6 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from '@mui/styles';
 
 
@@ -27,8 +28,13 @@ const useStyles = makeStyles({
     color: '#95989A'
   },
   ico: {
-    color: '#161c68'
-  }
+    color: '#161c68',
+    margin: '5px',
+  },
+  search: {
+    position: 'absolute',
+    top: 70,
+  },
 });
 
 
@@ -53,8 +59,18 @@ const ListParts = () => {
   }
   
   const filteredParts = () =>{
-    
-    return parts.slice(currentPage, currentPage+10);
+    if( search.length === 0 ){
+      return parts.slice(currentPage, currentPage+10);
+    }else{
+      //it creates new object of filtered parts
+      const filtered = parts.filter( p => p.part_number.includes( search ));
+      if(filtered.length > 0){
+        return filtered.slice( currentPage, currentPage + 10 );
+      }else{
+        return parts.slice(currentPage, currentPage+10);
+      }
+    }
+      
   }
   //------------------------------
 
@@ -83,12 +99,22 @@ const ListParts = () => {
   const classes = useStyles();
   
 
+  //Search
+  const [search, setSearch] = useState('');
+  const onSearchChange = (e)=> {
+      setCurrentPage(0);
+      setSearch(e.target.value);
+  }
+
+
   return (
     <div className='listParts'>
       <div className="page-container">
         <a onClick={()=>subtractPage()}><KeyboardArrowLeftIcon /></a>
         <span>Page {pageNumber}</span>
         <a onClick={()=>addPage()}><KeyboardArrowRightIcon /></a>
+        <input type="text" placeholder='Search Parts' value={search} onChange={onSearchChange} />
+        <SearchIcon className={classes.search}/>
       </div>
       <TableContainer component={Paper}>
       <Table 
