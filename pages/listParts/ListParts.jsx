@@ -11,6 +11,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { makeStyles } from '@mui/styles';
 
 
@@ -33,15 +35,40 @@ const useStyles = makeStyles({
 
 const ListParts = () => {
   
+  //To filter pages
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
+  const subtractPage= () => {
+    if(currentPage>0){
+      setCurrentPage(currentPage-10);
+      setPageNumber(pageNumber-1);
+    }
+  }
+  const addPage= () => {
+    if(parts.slice(currentPage+10, currentPage+20).length > 0){
+      setCurrentPage(currentPage+10);
+      setPageNumber(pageNumber+1);
+    }
+    
+  }
+  
+  const filteredParts = () =>{
+    
+    return parts.slice(currentPage, currentPage+10);
+  }
+  //------------------------------
+
+
+
   const [parts, setParts] = useState([]);
   useEffect(()=>{
     getParts();
+
   }, [])
   
   const getParts = ()=>{
     axios.get('http://localhost/api/part')
     .then(function(res){
-      console.log(res.data);
       setParts(res.data);
     })
   }
@@ -49,15 +76,20 @@ const ListParts = () => {
   const deleteUser = (id)=> {
     axios.delete(`http://localhost/api/part/${id}/delete`)
     .then(function(res){
-      console.log(res.data);
       getParts();
     })
   }
-  
+  //To personalize MUI Component
   const classes = useStyles();
+  
 
   return (
     <div className='listParts'>
+      <div className="page-container">
+        <a onClick={()=>subtractPage()}><KeyboardArrowLeftIcon /></a>
+        <span>Page {pageNumber}</span>
+        <a onClick={()=>addPage()}><KeyboardArrowRightIcon /></a>
+      </div>
       <TableContainer component={Paper}>
       <Table 
       sx={{ minWidth: 650, color: 'red'}} 
@@ -74,7 +106,7 @@ const ListParts = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {parts.map((part, key) => (
+          {filteredParts().map((part, key) => (
              <TableRow
              key={key}
              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

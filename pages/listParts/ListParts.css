@@ -1,6 +1,9 @@
 .listParts{
     padding: 25px 50px;
 }
-.MuiTableCell-root{
-    color: red;
+.page-container{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 15px;
 }

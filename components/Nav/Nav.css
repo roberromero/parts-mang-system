@@ -1,5 +1,6 @@
 .nav{
     background-color: #151c68;
+    display: flex;
 }
 .nav--ul{
     background-color: #161c68;
